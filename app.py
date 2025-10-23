@@ -8,18 +8,9 @@ def load_models():
     """Carga los modelos entrenados (.joblib)."""
     modelos = {}
     try:
-        modelos["Dólar"] = joblib.load('modelo_dolar.joblib')
-        # Simular la carga de los otros modelos
-        # modelos["Glucosa"] = joblib.load('modelo_glucosa.joblib') 
-        # modelos["Energía"] = joblib.load('modelo_energia.joblib') 
-        
-        # En caso de no existir los otros modelos (para propósitos de prueba)
-        # se usará el del Dólar como placeholder.
-        if "Glucosa" not in modelos:
-            modelos["Glucosa"] = modelos["Dólar"]
-        if "Energía" not in modelos:
-            modelos["Energía"] = modelos["Dólar"]
-            
+        modelos["Dólar"] = joblib.load('modelo_dólar.joblib')
+        modelos["Energía"] = joblib.load('modelo_energía.joblib')
+        modelos["Glucosa"] = joblib.load('modelo_glucosa.joblib')     
         return modelos
     except FileNotFoundError as e:
         st.error(f"Error al cargar el modelo: {e}. Asegúrate de que los archivos .joblib existan.")
@@ -54,12 +45,12 @@ if modelos:
         feature_order = ['Dia', 'Inflacion', 'Tasa_interes']
         
     elif ejercicio_seleccionado == "Glucosa":
-        # Estas variables son hipotéticas para el ejercicio de Glucosa
         st.subheader("Ingresa los valores (Glucosa):")
         variables['Edad'] = st.number_input("1. Edad (años):", min_value=1, value=45, step=1)
         variables['IMC'] = st.number_input("2. Índice de Masa Corporal (IMC):", min_value=10.0, value=25.0, format="%.1f")
-        variables['Hormona_x'] = st.number_input("3. Nivel de Hormona X:", min_value=0.0, value=10.0, format="%.1f")
-        feature_order = ['Edad', 'IMC', 'Hormona_x']
+        variables['Actividad_Fisica'] = st.number_input("3. Actividad Física (Hrs/semana):", min_value=0.0, value=5.0, format="%.1f")
+        feature_order = ['Edad', 'IMC', 'Actividad_Fisica'] 
+        unidad = " mg/dL"
         
     elif ejercicio_seleccionado == "Energía":
         # Estas variables son hipotéticas para el ejercicio de Energía
@@ -78,7 +69,7 @@ if modelos:
             # Realizar la predicción
             prediccion = modelo_actual.predict(input_data)[0]
             
-            unidad = " unidades monetarias"
+            unidad = "dolares"
             if ejercicio_seleccionado == "Glucosa":
                 unidad = " mg/dL"
             elif ejercicio_seleccionado == "Energía":
